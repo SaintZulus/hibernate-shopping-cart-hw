@@ -14,10 +14,13 @@ import mate.academy.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import java.util.List;
+
 @Service
 public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Inject
     private TicketDao ticketDao;
+    @Inject
     private ShoppingCartDao shoppingCartDao;
 
 
@@ -27,7 +30,9 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         ticket.setUser(user);
         ticket.setMovieSession(movieSession);
         ticketDao.add(ticket);
-        shoppingCartDao.update(getByUser(user));
+        ShoppingCart userShoppingCart = getByUser(user);
+        userShoppingCart.setTickets(List.of(ticket));
+        shoppingCartDao.update(userShoppingCart);
     }
 
     @Override
